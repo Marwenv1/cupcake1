@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Competition index{% endblock %}
+
+{% block body %}
+    <h1>Competition index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdCompetition</th>
+                <th>DateDebut</th>
+                <th>DateFin</th>
+                <th>NomCompetition</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for competition in competitions %}
+            <tr>
+                <td>{{ competition.idCompetition }}</td>
+                <td>{{ competition.dateDebut ? competition.dateDebut|date('Y-m-d') : '' }}</td>
+                <td>{{ competition.dateFin ? competition.dateFin|date('Y-m-d') : '' }}</td>
+                <td>{{ competition.nomCompetition }}</td>
+                <td>
+                    <a href="{{ path('competition_show', {'idCompetition': competition.idCompetition}) }}">show</a>
+                    <a href="{{ path('competition_edit', {'idCompetition': competition.idCompetition}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('competition_new') }}">Create new</a>
+{% endblock %}
