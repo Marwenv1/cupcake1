@@ -34,7 +34,7 @@ class PatisserieJson extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $rec = new Patisserie();
         $rec->setNom($request->get('nom'));
-        $rec->setIdutilisateur($request->get('iduser'));
+        $rec->setIdutilisateur(5);
         $rec->setEmail($request->get('email'));
         $rec->setAdresse($request->get('adresse'));
         $rec->setTel($request->get('tel'));

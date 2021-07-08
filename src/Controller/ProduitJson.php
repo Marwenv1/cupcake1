@@ -2,9 +2,7 @@
 
 
 namespace App\Controller;
-
-
-use App\Entity\Reclamation;
+use App\Entity\Produit;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,78 +12,71 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ReclamationJson extends AbstractController
+class ProduitJson extends AbstractController
 {
-
-
     /**
-     * @Route("/rec", name="rec")
+     * @Route("/produit", name="prod")
      */
-    public function AffAction()
+    public function AfiAction()
     {
-        $tasks = $this->getDoctrine()->getManager()->getRepository(Reclamation::class)->findAll();
+        $tasks = $this->getDoctrine()->getManager()->getRepository(Produit::class)->findAll();
 
         $serializer = new Serializer([new ObjectNormalizer()]);
         $formatted = $serializer->normalize($tasks);
         return new JsonResponse($formatted);
     }
     /**
-     * @Route("/rec/add", name="recadd")
+     * @Route("/prod/add", name="prodadd")
      */
     public function adAction(Request $request,NormalizerInterface $Normalizer)
     {
         $em = $this->getDoctrine()->getManager();
-        $rec = new Reclamation();
-        $rec->setImessage($request->get('imessage'));
-        $rec->setIdutilisateur(4);
-        $rec->setIdpatisserie(5);
-        $rec->setVisible($request->get('visible'));
-        $rec->setStatus($request->get('status'));
-        $rec->setReponse($request->get('reponse'));
+        $rec = new Produit();
+        $rec->setDescription($request->get('description'));
+        $rec->setIdpatisserie(4);
+        $rec->setDesignation($request->get('designation'));
+        $rec->setImage($request->get('image'));
+        $rec->setNote(4);
+        $rec->setPrix($request->get('prix'));
+        $rec->setQteStock($request->get('qte'));
         $em->persist($rec);
         $em->flush();
         $jsonContent = $Normalizer->normalize($rec,'json',['groups'=>'post:read']);
         return new Response(json_encode($jsonContent));
     }
-
     /**
-     * @Route("/rec/del/{id}", name="cvvd")
+     * @Route("/prod/del/{id}", name="prodd")
      */
     public function del(Request $request,NormalizerInterface $Normalizer,$id)
     {
         $em = $this->getDoctrine()->getManager();
-        $comp = $em->getRepository(Reclamation::class)->find($id);
+        $comp = $em->getRepository(Produit::class)->find($id);
         $em->remove($comp);
         $em->flush();
         $jsonContent = $Normalizer->normalize($comp,'json',['groups'=>'post:read']);
-        return new Response("Deleted Succesfully".json_encode($jsonContent));
+        return new Response("Deleted".json_encode($jsonContent));
     }
     /**
-     * @Route("/rec/{id}", name="qf")
+     * @Route("/prod/{id}", name="produ")
      */
     public function find(Request $request,NormalizerInterface $Normalizer,$id)
     {
         $em = $this->getDoctrine()->getManager();
-        $cv = $em->getRepository(Reclamation::class)->find($id);
+        $cv = $em->getRepository(Produit::class)->find($id);
         $jsonContent = $Normalizer->normalize($cv,'json',['groups'=>'post:read']);
         return new Response(json_encode($jsonContent));
     }
     /**
-     * @Route("/rec/modify/{id_reclamation}", name="cvre")
+     * @Route("/prod/modify/{id}", name="prodm")
      */
-    public function ModifyAction(Request $request,NormalizerInterface $Normalizer,$id_reclamation)
+    public function ModifyAction(Request $request,NormalizerInterface $Normalizer,$id)
     {
         $em = $this->getDoctrine()->getManager();
-        $rec = $em->getRepository(Reclamation::class)->find($id_reclamation);
-        $rec->setImessage($request->get('imessage'));
-        $rec->setIdutilisateur($request->get('iduser'));
-        $rec->setIdpatisserie($request->get('idpatisserie'));
-        $rec->setVisible($request->get('visible'));
-        $rec->setStatus($request->get('status'));
-        $rec->setReponse($request->get('reponse'));
+        $rec = $em->getRepository(Produit::class)->find($id);
+        $rec->setIdcompetition(5);
+        $rec->setType($request->get('type'));
         $em->flush();
         $jsonContent = $Normalizer->normalize($rec,'json',['groups'=>'post:read']);
         return new Response(json_encode($jsonContent));
     }
-
 }
